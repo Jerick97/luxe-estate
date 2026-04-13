@@ -1,14 +1,25 @@
+import { Suspense } from "react";
 import { Search, Settings2, ArrowRight } from "lucide-react";
 import { FeaturedCollectionCard } from "@/components/properties/FeaturedCollectionCard";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { supabase } from "@/lib/supabase";
 import { DbProperty, toProperty } from "@/lib/types";
+import { HomeSearch } from "@/components/search/HomeSearch";
 
 const PAGE_SIZE = 8;
 
 interface Props {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ 
+    page?: string;
+    query?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    type?: string;
+    beds?: string;
+    baths?: string;
+    amenities?: string;
+  }>;
 }
 
 export default async function Home({ searchParams }: Props) {
@@ -26,17 +37,34 @@ export default async function Home({ searchParams }: Props) {
     .returns<DbProperty[]>();
 
   // Fetch paginated new-in-market properties with count
-  const { data: marketRows, count } = await supabase
+  let marketQuery = supabase
     .from('properties')
     .select('*', { count: 'exact' })
     .eq('is_featured', false)
     .order('created_at', { ascending: true })
-    .range(from, to)
-    .returns<DbProperty[]>();
+    .range(from, to);
+
+  const query = params.query || "";
+  if (query) {
+    marketQuery = marketQuery.or(`title.ilike.%${query}%,location.ilike.%${query}%`);
+  }
+  if (params.minPrice) marketQuery = marketQuery.gte('price', parseInt(params.minPrice));
+  if (params.maxPrice) marketQuery = marketQuery.lte('price', parseInt(params.maxPrice));
+  if (params.type && params.type !== "Any Type") marketQuery = marketQuery.eq('type', params.type);
+  if (params.beds && parseInt(params.beds) > 0) marketQuery = marketQuery.gte('beds', parseInt(params.beds));
+  if (params.baths && parseInt(params.baths) > 0) marketQuery = marketQuery.gte('baths', parseInt(params.baths));
+  if (params.amenities) {
+    const arr = params.amenities.split(',');
+    marketQuery = marketQuery.contains('amenities', arr);
+  }
+
+  const { data: marketRows, count } = await marketQuery.returns<DbProperty[]>();
 
   const featuredProperties = (featuredRows ?? []).map(toProperty);
   const newInMarketProperties = (marketRows ?? []).map(toProperty);
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
+  const hasFilters = !!(params.query || params.minPrice || params.maxPrice || (params.type && params.type !== 'All') || params.beds || params.baths || params.amenities);
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full">
@@ -48,62 +76,34 @@ export default async function Home({ searchParams }: Props) {
               <span className="absolute bottom-2 left-0 w-full h-3 bg-mosque/20 -rotate-1 z-0"></span>
             </span>.
           </h1>
-          
-          <div className="relative group max-w-2xl mx-auto">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="text-nordic-muted text-2xl group-focus-within:text-mosque transition-colors h-6 w-6" strokeWidth={1.5} />
-            </div>
-            <input 
-              className="block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white dark:bg-white/5 text-nordic-dark dark:text-white shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white dark:focus:bg-white/10 transition-all text-lg outline-none" 
-              placeholder="Search by city, neighborhood, or address..." 
-              type="text" 
-            />
-            <button className="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20">
-              Search
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-center gap-3 overflow-x-auto hide-scroll py-2 px-4 -mx-4">
-            <button className="whitespace-nowrap px-5 py-2 rounded-full bg-nordic-dark text-white text-sm font-medium shadow-lg shadow-nordic-dark/10 transition-transform hover:-translate-y-0.5">
-              All
-            </button>
-            <button className="whitespace-nowrap px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-              House
-            </button>
-            <button className="whitespace-nowrap px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-              Apartment
-            </button>
-            <button className="whitespace-nowrap px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-              Villa
-            </button>
-            <button className="whitespace-nowrap px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-              Penthouse
-            </button>
-            <div className="w-px h-6 bg-nordic-dark/10 mx-2"></div>
-            <button className="whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-              <Settings2 className="h-4 w-4" strokeWidth={2} /> Filters
-            </button>
-          </div>
+        </div>
+        
+        <div className="mt-8">
+          <Suspense fallback={<div className="h-20 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl max-w-2xl mx-auto"></div>}>
+            <HomeSearch />
+          </Suspense>
         </div>
       </section>
       
-      <section className="mb-16">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-light text-nordic-dark dark:text-white">Featured Collections</h2>
-            <p className="text-nordic-muted mt-1 text-sm">Curated properties for the discerning eye.</p>
+      {!hasFilters && (
+        <section className="mb-16">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-light text-nordic-dark dark:text-white">Featured Collections</h2>
+              <p className="text-nordic-muted mt-1 text-sm">Curated properties for the discerning eye.</p>
+            </div>
+            <a href="#" className="hidden sm:flex items-center gap-1 text-sm font-medium text-mosque hover:opacity-70 transition-opacity">
+              View all <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+            </a>
           </div>
-          <a href="#" className="hidden sm:flex items-center gap-1 text-sm font-medium text-mosque hover:opacity-70 transition-opacity">
-            View all <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
-          </a>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {featuredProperties.map(property => (
-            <FeaturedCollectionCard key={property.id} property={property} />
-          ))}
-        </div>
-      </section>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {featuredProperties.map(property => (
+              <FeaturedCollectionCard key={property.id} property={property} />
+            ))}
+          </div>
+        </section>
+      )}
       
       <section>
         <div className="flex items-end justify-between mb-8">

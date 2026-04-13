@@ -1,4 +1,4 @@
-export type PropertyType = 'House' | 'Apartment' | 'Villa' | 'Penthouse' | 'Studio';
+export type PropertyType = 'House' | 'Apartment' | 'Villa' | 'Penthouse' | 'Studio' | 'Condo' | 'Townhouse';
 export type PropertyStatus = 'FOR SALE' | 'FOR RENT';
 export type FeaturedBadge = 'Exclusive' | 'New Arrival';
 
@@ -22,6 +22,7 @@ export interface Property {
   isFeatured?: boolean;
   lat?: number;
   lng?: number;
+  amenities?: string[];
 }
 
 /** Raw row shape from the Supabase `properties` table (snake_case). */
@@ -44,6 +45,7 @@ export interface DbProperty {
   gallery_urls?: string[];
   lat?: number;
   lng?: number;
+  amenities?: string[];
 }
 
 /** Convert a DB row to the frontend Property shape. */
@@ -68,5 +70,6 @@ export function toProperty(row: DbProperty): Property {
     isFeatured: row.is_featured,
     lat: row.lat,
     lng: row.lng,
+    amenities: row.amenities || [],
   };
 }
