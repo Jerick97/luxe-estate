@@ -35,7 +35,7 @@ const sfPro = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Luxe Estate Home Discover Screen",
+  title: "Luxu Estate Home Discover Screen",
   description: "Find your sanctuary.",
 };
 

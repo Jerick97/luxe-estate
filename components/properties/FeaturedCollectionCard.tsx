@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Heart, MapPin, BedDouble, Bath, Maximize } from "lucide-react";
-import { Property } from "@/data/properties.mock";
+import { Property } from "@/lib/types";
 
 interface Props {
   property: Property;

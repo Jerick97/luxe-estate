@@ -1,9 +1,9 @@
 @AGENTS.md
 
-# Luxe Estate — Project Context
+# Luxu Estate — Project Context
 
 ## Overview
-Luxe Estate is a premium real estate web application built with **Next.js 16 (App Router)** and **Tailwind CSS v4**. The goal is to implement a modern, premium, and minimalist property listing platform following exact design references located in `docs/design/`.
+Luxu Estate is a premium real estate web application built with **Next.js 16 (App Router)** and **Tailwind CSS v4**. The goal is to implement a modern, premium, and minimalist property listing platform following exact design references located in `docs/design/`.
 
 ## Tech Stack
 - **Framework**: Next.js 16.2.2 (App Router)
@@ -17,7 +17,7 @@ Luxe Estate is a premium real estate web application built with **Next.js 16 (Ap
 ## Project Structure
 
 ```
-luxe-estate/
+luxu-estate/
 ├── app/                          # Next.js App Router
 │   ├── fonts/                    # SF Pro Display .woff2 files (Regular, Medium, SemiboldItalic, Bold, BlackItalic)
 │   ├── globals.css               # Tailwind v4 import + @theme config (custom colors, shadows, fonts)

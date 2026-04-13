@@ -1,9 +1,43 @@
 import { Search, Settings2, ArrowRight } from "lucide-react";
 import { FeaturedCollectionCard } from "@/components/properties/FeaturedCollectionCard";
 import { PropertyCard } from "@/components/properties/PropertyCard";
-import { featuredProperties, newInMarketProperties } from "@/data/properties.mock";
+import { Pagination } from "@/components/ui/Pagination";
+import { supabase } from "@/lib/supabase";
+import { DbProperty, toProperty } from "@/lib/types";
 
-export default function Home() {
+const PAGE_SIZE = 8;
+
+interface Props {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function Home({ searchParams }: Props) {
+  const params = await searchParams;
+  const currentPage = Math.max(1, Number(params.page) || 1);
+  const from = (currentPage - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  // Fetch featured properties (no pagination)
+  const { data: featuredRows } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('is_featured', true)
+    .order('created_at', { ascending: true })
+    .returns<DbProperty[]>();
+
+  // Fetch paginated new-in-market properties with count
+  const { data: marketRows, count } = await supabase
+    .from('properties')
+    .select('*', { count: 'exact' })
+    .eq('is_featured', false)
+    .order('created_at', { ascending: true })
+    .range(from, to)
+    .returns<DbProperty[]>();
+
+  const featuredProperties = (featuredRows ?? []).map(toProperty);
+  const newInMarketProperties = (marketRows ?? []).map(toProperty);
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full">
       <section className="py-12 md:py-16">
@@ -85,26 +119,16 @@ export default function Home() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {newInMarketProperties.map((property, index) => {
-            // Apply original CSS hidden classes based on index to exactly match code.html behavior
-            let className = "";
-            if (index === 4) className = "hidden xl:flex";
-            if (index === 5) className = "hidden lg:flex";
-            
-            return (
-              <PropertyCard 
-                key={property.id} 
-                property={property} 
-                className={className} 
-              />
-            );
-          })}
+          {newInMarketProperties.map((property) => (
+            <PropertyCard 
+              key={property.id} 
+              property={property} 
+            />
+          ))}
         </div>
         
-        <div className="mt-12 text-center">
-          <button className="px-8 py-3 bg-white dark:bg-white/5 border border-nordic-dark/10 dark:border-white/10 hover:border-mosque hover:text-mosque text-nordic-dark dark:text-white font-medium rounded-lg transition-all hover:shadow-md cursor-pointer">
-            Load more properties
-          </button>
+        <div className="mt-12">
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       </section>
     </main>

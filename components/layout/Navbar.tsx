@@ -12,7 +12,7 @@ export const Navbar = () => {
               <Building className="text-white h-5 w-5" />
             </div>
             <span className="text-xl font-semibold tracking-tight text-nordic-dark dark:text-white">
-              LuxeEstate
+              LuxuEstate
             </span>
           </div>
           
