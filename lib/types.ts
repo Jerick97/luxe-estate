@@ -4,6 +4,7 @@ export type FeaturedBadge = 'Exclusive' | 'New Arrival';
 
 export interface Property {
   id: string;
+  slug: string;
   title: string;
   location: string;
   price: number;
@@ -13,10 +14,14 @@ export interface Property {
   area: number;
   imageUrl: string;
   imageAlt: string;
+  galleryUrls: string[];
   status: PropertyStatus;
   type: PropertyType;
   featuredBadge?: FeaturedBadge | null;
+
   isFeatured?: boolean;
+  lat?: number;
+  lng?: number;
 }
 
 /** Raw row shape from the Supabase `properties` table (snake_case). */
@@ -25,35 +30,43 @@ export interface DbProperty {
   title: string;
   location: string;
   price: number;
-  period: string | null;
+  period?: "/mo" | null;
   beds: number;
   baths: number;
   area: number;
-  image_url: string;
   image_alt: string;
-  status: PropertyStatus;
-  type: PropertyType;
-  featured_badge: FeaturedBadge | null;
-  is_featured: boolean;
-  created_at: string;
+  status: string;
+  type: string;
+  featured_badge?: "Exclusive" | "New Arrival" | null;
+  created_at?: string;
+  is_featured?: boolean;
+  slug: string;
+  gallery_urls?: string[];
+  lat?: number;
+  lng?: number;
 }
 
 /** Convert a DB row to the frontend Property shape. */
 export function toProperty(row: DbProperty): Property {
   return {
     id: row.id,
+    slug: row.slug,
     title: row.title,
     location: row.location,
     price: row.price,
-    period: row.period as Property['period'],
+    period: row.period as "/mo" | undefined,
     beds: row.beds,
     baths: row.baths,
     area: row.area,
-    imageUrl: row.image_url,
+    // Safely derive imageUrl from the first gallery item
+    imageUrl: (row.gallery_urls && row.gallery_urls.length > 0) ? row.gallery_urls[0] : '',
     imageAlt: row.image_alt,
-    status: row.status,
-    type: row.type,
+    galleryUrls: row.gallery_urls || [],
+    status: row.status as PropertyStatus,
+    type: row.type as PropertyType,
     featuredBadge: row.featured_badge,
     isFeatured: row.is_featured,
+    lat: row.lat,
+    lng: row.lng,
   };
 }

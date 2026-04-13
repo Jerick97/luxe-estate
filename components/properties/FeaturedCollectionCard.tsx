@@ -6,9 +6,11 @@ interface Props {
   property: Property;
 }
 
+import Link from "next/link";
+
 export const FeaturedCollectionCard = ({ property }: Props) => {
   return (
-    <div className="group relative rounded-xl overflow-hidden shadow-soft bg-white dark:bg-white/5 cursor-pointer">
+    <Link href={`/properties/${property.slug}`} className="block group relative rounded-xl overflow-hidden shadow-soft bg-white dark:bg-white/5 cursor-pointer">
       <div className="aspect-4/3 w-full overflow-hidden relative">
         <Image 
           src={property.imageUrl} 
@@ -55,6 +57,6 @@ export const FeaturedCollectionCard = ({ property }: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

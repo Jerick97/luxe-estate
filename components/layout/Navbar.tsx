@@ -7,14 +7,14 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           
-          <div className="shrink-0 flex items-center gap-2 cursor-pointer">
+          <Link href="/" className="shrink-0 flex items-center gap-2 cursor-pointer transition-transform hover:-translate-y-0.5">
             <div className="w-8 h-8 rounded-lg bg-nordic-dark flex items-center justify-center">
               <Building className="text-white h-5 w-5" />
             </div>
             <span className="text-xl font-semibold tracking-tight text-nordic-dark dark:text-white">
               LuxuEstate
             </span>
-          </div>
+          </Link>
           
           <div className="hidden md:flex items-center space-x-8">
             <Link href="#" className="relative group text-mosque font-medium text-sm px-1 py-1">
