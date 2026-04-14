@@ -17,7 +17,7 @@ export const LanguageSelector = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const document = window.document;
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
@@ -38,7 +38,9 @@ export const LanguageSelector = () => {
 		}
 
 		// Set the cookie (valid for 1 year)
-		document.cookie = `${COOKIE_NAME}=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+		if (typeof window !== "undefined") {
+			window.document.cookie = `${COOKIE_NAME}=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+		}
 
 		// Force a router refresh to re-fetch Server Components with the new cookie
 		router.refresh();
