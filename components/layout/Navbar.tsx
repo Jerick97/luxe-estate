@@ -1,7 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import { Building, Search, Bell, User } from "lucide-react";
 import Link from "next/link";
+import { SearchFiltersModal } from "@/components/search/SearchFiltersModal";
 
 export const Navbar = () => {
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   return (
     <nav className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-nordic-dark/10 dark:border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +41,10 @@ export const Navbar = () => {
           </div>
           
           <div className="flex items-center space-x-6">
-            <button className="text-nordic-dark hover:text-mosque dark:text-gray-400 dark:hover:text-white transition-colors">
+            <button 
+              onClick={() => setIsFiltersOpen(true)}
+              className="text-nordic-dark hover:text-mosque dark:text-gray-400 dark:hover:text-white transition-colors"
+            >
               <Search className="h-6 w-6" strokeWidth={1.5} />
             </button>
             <button className="text-nordic-dark hover:text-mosque dark:text-gray-400 dark:hover:text-white transition-colors relative">
@@ -61,6 +69,11 @@ export const Navbar = () => {
           <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-nordic-dark hover:bg-black/5">Saved Homes</Link>
         </div>
       </div>
+
+      <SearchFiltersModal 
+        isOpen={isFiltersOpen} 
+        onClose={() => setIsFiltersOpen(false)} 
+      />
     </nav>
   );
 };

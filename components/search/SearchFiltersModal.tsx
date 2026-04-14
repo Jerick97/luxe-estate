@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, MapPin, ChevronDown, Minus, Plus, Waves, Dumbbell, Car, Wind, Wifi, Sun, ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -46,6 +47,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
   }, [isOpen]);
 
   if (!isOpen) return null;
+  if (typeof document === "undefined") return null;
 
   const toggleAmenity = (id: string) => {
     setSelectedAmenities(prev => 
@@ -94,7 +96,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
     onClose();
   };
 
-  return (
+  return createPortal(
     <>
       {/* Modal Overlay */}
       <div 
@@ -288,6 +290,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
           </button>
         </footer>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
