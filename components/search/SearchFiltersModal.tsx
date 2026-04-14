@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, MapPin, ChevronDown, Minus, Plus, Waves, Dumbbell, Car, Wind, Wifi, Sun, ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from "@/components/providers/I18nProvider";
 
 interface SearchFiltersModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const AMENITIES = [
 export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   const [location, setLocation] = useState(searchParams.get("query") || "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
@@ -109,7 +111,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
         
         {/* Header */}
         <header className="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-gray-900 sticky top-0 z-30">
-          <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Filters</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{t("filters.title")}</h1>
           <button 
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400"
@@ -124,13 +126,13 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
           {/* Section 1: Location */}
           <section>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-              Location
+              {t("filters.location")}
             </label>
             <div className="relative group">
               <MapPin className="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-mosque transition-colors w-5 h-5" />
               <input 
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-mosque focus:bg-white dark:focus:bg-gray-800 transition-all shadow-sm outline-none" 
-                placeholder="City, neighborhood, or address" 
+                placeholder={t("filters.locationPlaceholder")} 
                 type="text" 
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -141,12 +143,12 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
           {/* Section 2: Price Range */}
           <section>
             <div className="flex justify-between items-end mb-4">
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price Range</label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("filters.priceRange")}</label>
             </div>
             
             <div className="grid grid-cols-2 gap-4 mt-2">
               <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-transparent focus-within:border-mosque/30 transition-colors">
-                <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">Min Price</label>
+                <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">{t("filters.minPrice")}</label>
                 <div className="flex items-center">
                   <span className="text-gray-400 mr-1">$</span>
                   <input 
@@ -159,13 +161,13 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
                 </div>
               </div>
               <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-transparent focus-within:border-mosque/30 transition-colors">
-                <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">Max Price</label>
+                <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">{t("filters.maxPrice")}</label>
                 <div className="flex items-center">
                   <span className="text-gray-400 mr-1">$</span>
                   <input 
                     className="w-full bg-transparent border-0 p-0 text-gray-900 dark:text-white font-medium focus:ring-0 text-sm outline-none" 
                     type="number" 
-                    placeholder="Any"
+                    placeholder={t("filters.any")}
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
                   />
@@ -178,21 +180,16 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Property Type */}
             <div className="space-y-3">
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Property Type</label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("filters.propertyType")}</label>
               <div className="relative">
                 <select 
                   className="w-full bg-gray-50 dark:bg-gray-800 border-0 rounded-lg py-3 pl-4 pr-10 text-gray-900 dark:text-white appearance-none focus:ring-2 focus:ring-mosque cursor-pointer outline-none"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
-                  <option>Any Type</option>
-                  <option>House</option>
-                  <option>Apartment</option>
-                  <option>Condo</option>
-                  <option>Townhouse</option>
-                  <option>Villa</option>
-                  <option>Penthouse</option>
-                  <option>Studio</option>
+                  {["Any Type", "House", "Apartment", "Condo", "Townhouse", "Villa", "Penthouse", "Studio"].map((tOption) => (
+                    <option key={tOption} value={tOption}>{t(`search.types.${tOption}`)}</option>
+                  ))}
                 </select>
                 <ChevronDown className="absolute right-3 top-3 text-gray-400 w-5 h-5 pointer-events-none" />
               </div>
@@ -202,7 +199,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
             <div className="space-y-4">
               {/* Beds */}
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Bedrooms</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{t("filters.bedrooms")}</span>
                 <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 rounded-full p-1">
                   <button 
                     onClick={() => setBeds(Math.max(0, beds - 1))}
@@ -210,7 +207,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="text-sm font-semibold w-4 text-center">{beds > 0 ? beds + '+' : 'Any'}</span>
+                  <span className="text-sm font-semibold w-4 text-center">{beds > 0 ? beds + '+' : t("filters.any")}</span>
                   <button 
                     onClick={() => setBeds(beds + 1)}
                     className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center text-gray-500 hover:text-mosque disabled:opacity-50 transition-colors"
@@ -222,7 +219,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
               
               {/* Baths */}
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Bathrooms</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{t("filters.bathrooms")}</span>
                 <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 rounded-full p-1">
                   <button 
                     onClick={() => setBaths(Math.max(0, baths - 1))}
@@ -230,7 +227,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="text-sm font-semibold w-4 text-center">{baths > 0 ? baths + '+' : 'Any'}</span>
+                  <span className="text-sm font-semibold w-4 text-center">{baths > 0 ? baths + '+' : t("filters.any")}</span>
                   <button 
                     onClick={() => setBaths(baths + 1)}
                     className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center text-gray-500 hover:text-mosque disabled:opacity-50 transition-colors"
@@ -245,7 +242,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
           {/* Section 4: Amenities */}
           <section>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-              Amenities & Features
+              {t("filters.amenitiesSection")}
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {AMENITIES.map((amenity) => {
@@ -262,7 +259,7 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
                     }`}
                   >
                     <Icon className={`w-4 h-4 ${isSelected ? 'text-mosque' : 'text-gray-400'}`} />
-                    {amenity.label}
+                    {t(`filters.amenities.${amenity.id}`)}
                     {isSelected && (
                       <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-mosque rounded-full" />
                     )}
@@ -279,13 +276,13 @@ export function SearchFiltersModal({ isOpen, onClose }: SearchFiltersModalProps)
             onClick={handleClear}
             className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors underline decoration-transparent hover:decoration-gray-300 underline-offset-4"
           >
-            Clear all
+            {t("filters.clearAll")}
           </button>
           <button 
             onClick={handleApply}
             className="bg-mosque hover:bg-mosque/90 text-white px-8 py-3 rounded-lg font-medium shadow-lg shadow-mosque/30 transition-all hover:shadow-mosque/40 flex items-center gap-2 transform active:scale-95"
           >
-            Apply Filters
+            {t("filters.applyFilters")}
             <ArrowRight className="w-4 h-4 ml-1" />
           </button>
         </footer>

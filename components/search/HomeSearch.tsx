@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Search, Settings2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchFiltersModal } from "./SearchFiltersModal";
+import { useTranslation } from "@/components/providers/I18nProvider";
 
 const PROPERTY_TYPES = ["All", "House", "Apartment", "Villa", "Penthouse", "Condo", "Townhouse"];
 
 export function HomeSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   
   const [query, setQuery] = useState(searchParams.get("query") || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +48,7 @@ export function HomeSearch() {
         </div>
         <input 
           className="block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white dark:bg-white/5 text-nordic-dark dark:text-white shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white dark:focus:bg-white/10 transition-all text-lg outline-none" 
-          placeholder="Search by city, neighborhood, or address..." 
+          placeholder={t("search.placeholder")} 
           type="text" 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -56,7 +58,7 @@ export function HomeSearch() {
           onClick={handleSearch}
           className="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20"
         >
-          Search
+          {t("search.button")}
         </button>
       </div>
       
@@ -71,7 +73,7 @@ export function HomeSearch() {
                 : "bg-white dark:bg-white/5 border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 hover:bg-mosque/5"
             }`}
           >
-            {type}
+            {t(`search.types.${type}`)}
           </button>
         ))}
         <div className="w-px h-6 bg-nordic-dark/10 mx-2 flex-shrink-0"></div>
@@ -79,7 +81,7 @@ export function HomeSearch() {
           onClick={() => setIsModalOpen(true)}
           className="whitespace-nowrap flex-shrink-0 flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
         >
-          <Settings2 className="h-4 w-4" strokeWidth={2} /> Filters
+          <Settings2 className="h-4 w-4" strokeWidth={2} /> {t("search.filters")}
         </button>
       </div>
 

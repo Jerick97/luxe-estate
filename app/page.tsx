@@ -1,11 +1,14 @@
 import { Suspense } from "react";
 import { Search, Settings2, ArrowRight } from "lucide-react";
+import { cookies } from "next/headers";
 import { FeaturedCollectionCard } from "@/components/properties/FeaturedCollectionCard";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { supabase } from "@/lib/supabase";
 import { DbProperty, toProperty } from "@/lib/types";
 import { HomeSearch } from "@/components/search/HomeSearch";
+import { COOKIE_NAME, Locale, defaultLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 const PAGE_SIZE = 8;
 
@@ -66,15 +69,19 @@ export default async function Home({ searchParams }: Props) {
 
   const hasFilters = !!(params.query || params.minPrice || params.maxPrice || (params.type && params.type !== 'All') || params.beds || params.baths || params.amenities);
 
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get(COOKIE_NAME)?.value as Locale) || defaultLocale;
+  const dict = await getDictionary(locale);
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full">
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-nordic-dark dark:text-white leading-tight">
-            Find your <span className="relative inline-block">
-              <span className="relative z-10 font-medium">sanctuary</span>
+            {dict.home.titlePrefix} <span className="relative inline-block">
+              <span className="relative z-10 font-medium">{dict.home.titleHighlight}</span>
               <span className="absolute bottom-2 left-0 w-full h-3 bg-mosque/20 -rotate-1 z-0"></span>
-            </span>.
+            </span>{dict.home.titleSuffix}
           </h1>
         </div>
         
@@ -89,11 +96,11 @@ export default async function Home({ searchParams }: Props) {
         <section className="mb-16">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-light text-nordic-dark dark:text-white">Featured Collections</h2>
-              <p className="text-nordic-muted mt-1 text-sm">Curated properties for the discerning eye.</p>
+              <h2 className="text-2xl font-light text-nordic-dark dark:text-white">{dict.home.featuredTitle}</h2>
+              <p className="text-nordic-muted mt-1 text-sm">{dict.home.featuredSubtitle}</p>
             </div>
             <a href="#" className="hidden sm:flex items-center gap-1 text-sm font-medium text-mosque hover:opacity-70 transition-opacity">
-              View all <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+              {dict.home.viewAll} <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
             </a>
           </div>
           
@@ -108,13 +115,13 @@ export default async function Home({ searchParams }: Props) {
       <section>
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-light text-nordic-dark dark:text-white">New in Market</h2>
-            <p className="text-nordic-muted mt-1 text-sm">Fresh opportunities added this week.</p>
+            <h2 className="text-2xl font-light text-nordic-dark dark:text-white">{dict.home.newInMarket}</h2>
+            <p className="text-nordic-muted mt-1 text-sm">{dict.home.newInMarketSubtitle}</p>
           </div>
           <div className="hidden md:flex bg-white dark:bg-white/5 p-1 rounded-lg">
-            <button className="px-4 py-1.5 rounded-md text-sm font-medium bg-nordic-dark text-white shadow-sm">All</button>
-            <button className="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-muted hover:text-nordic-dark dark:hover:text-white">Buy</button>
-            <button className="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-muted hover:text-nordic-dark dark:hover:text-white">Rent</button>
+            <button className="px-4 py-1.5 rounded-md text-sm font-medium bg-nordic-dark text-white shadow-sm">{dict.home.all}</button>
+            <button className="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-muted hover:text-nordic-dark dark:hover:text-white">{dict.navbar.buy}</button>
+            <button className="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-muted hover:text-nordic-dark dark:hover:text-white">{dict.navbar.rent}</button>
           </div>
         </div>
         

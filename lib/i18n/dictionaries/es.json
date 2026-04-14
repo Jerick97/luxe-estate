@@ -1,0 +1,85 @@
+{
+  "navbar": {
+    "buy": "Comprar",
+    "rent": "Alquilar",
+    "sell": "Vender",
+    "savedHomes": "Guardados"
+  },
+  "home": {
+    "titlePrefix": "Encuentra tu ",
+    "titleHighlight": "santuario",
+    "titleSuffix": ".",
+    "featuredTitle": "Colecciones Destacadas",
+    "featuredSubtitle": "Propiedades selectas para el ojo exigente.",
+    "viewAll": "Ver todas",
+    "newInMarket": "Nuevas en el Mercado",
+    "newInMarketSubtitle": "Nuevas oportunidades agregadas esta semana.",
+    "all": "Todo"
+  },
+  "search": {
+    "placeholder": "Busca por ciudad, barrio o dirección...",
+    "button": "Buscar",
+    "filters": "Filtros",
+    "types": {
+      "All": "Todo",
+      "House": "Casa",
+      "Apartment": "Apartamento",
+      "Villa": "Villa",
+      "Penthouse": "Penthouse",
+      "Condo": "Condominio",
+      "Townhouse": "Adosado",
+      "Any Type": "Cualquier Tipo",
+      "Studio": "Estudio"
+    }
+  },
+  "filters": {
+    "title": "Filtros",
+    "location": "Ubicación",
+    "locationPlaceholder": "Ciudad, barrio o dirección",
+    "priceRange": "Rango de Precio",
+    "minPrice": "Precio Min",
+    "maxPrice": "Precio Max",
+    "propertyType": "Tipo de Propiedad",
+    "bedrooms": "Dormitorios",
+    "bathrooms": "Baños",
+    "any": "Cualq.",
+    "amenitiesSection": "Comodidades y Características",
+    "amenities": {
+      "Swimming Pool": "Piscina",
+      "Gym": "Gimnasio",
+      "Parking": "Estacionamiento",
+      "Air Conditioning": "Aire Acondicionado",
+      "High-speed Wifi": "Wifi de alta velocidad",
+      "Patio / Terrace": "Patio / Terraza",
+      "Smart Home System": "Sistema de Casa Inteligente",
+      "Central Heating & Cooling": "Calefacción y Aire Central",
+      "Electric Vehicle Charging": "Carga para Vehículos Eléctricos",
+      "Private Gym": "Gimnasio Privado",
+      "Wine Cellar": "Cava de Vinos"
+    },
+    "clearAll": "Limpiar todo",
+    "applyFilters": "Aplicar Filtros"
+  },
+  "property": {
+    "topRatedAgent": "Agente Destacado",
+    "scheduleVisit": "Programar Visita",
+    "contactAgent": "Contactar Agente",
+    "viewOnMap": "Ver en el Mapa",
+    "propertyFeatures": "Características",
+    "squareMeters": "Metros Cuadrados",
+    "bedrooms": "Dormitorios",
+    "bathrooms": "Baños",
+    "garage": "Garaje",
+    "aboutThisHome": "Sobre esta propiedad",
+    "readMore": "Leer más",
+    "amenitiesTitle": "Comodidades",
+    "estimatedPayment": "Pago Estimado",
+    "startingFrom": "Desde ",
+    "perMonth": "/mes",
+    "withDown": " con 20% inicial",
+    "calculateMortgage": "Calcular Hipoteca",
+    "description1": "Crea recuerdos inolvidables en esta impresionante casa en el corazón de ",
+    "description1Suffix": ". Diseñada con énfasis en la vida interior-exterior, la residencia cuenta con ventanales de vidrio que llenan los interiores de luz natural.",
+    "description2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes personalizados. Refúgiate en la suite principal, un santuario de relajación con spa y balcón privado."
+  }
+}

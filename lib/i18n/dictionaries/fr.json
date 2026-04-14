@@ -1,0 +1,85 @@
+{
+  "navbar": {
+    "buy": "Acheter",
+    "rent": "Louer",
+    "sell": "Vendre",
+    "savedHomes": "Sauvegardés"
+  },
+  "home": {
+    "titlePrefix": "Trouvez votre ",
+    "titleHighlight": "sanctuaire",
+    "titleSuffix": ".",
+    "featuredTitle": "Collections Sélectionnées",
+    "featuredSubtitle": "Des propriétés pour les plus exigeants.",
+    "viewAll": "Voir tout",
+    "newInMarket": "Nouveau sur le marché",
+    "newInMarketSubtitle": "Nouvelles opportunités ajoutées cette semaine.",
+    "all": "Tout"
+  },
+  "search": {
+    "placeholder": "Recherche par ville, quartier ou adresse...",
+    "button": "Chercher",
+    "filters": "Filtres",
+    "types": {
+      "All": "Tout",
+      "House": "Maison",
+      "Apartment": "Appartement",
+      "Villa": "Villa",
+      "Penthouse": "Penthouse",
+      "Condo": "Condo",
+      "Townhouse": "Maison de ville",
+      "Any Type": "N'importe",
+      "Studio": "Studio"
+    }
+  },
+  "filters": {
+    "title": "Filtres",
+    "location": "Emplacement",
+    "locationPlaceholder": "Ville, quartier ou adresse",
+    "priceRange": "Gamme de Prix",
+    "minPrice": "Prix Min",
+    "maxPrice": "Prix Max",
+    "propertyType": "Type de Propriété",
+    "bedrooms": "Chambres",
+    "bathrooms": "Salles de bain",
+    "any": "Tous",
+    "amenitiesSection": "Équipements et Caractéristiques",
+    "amenities": {
+      "Swimming Pool": "Piscine",
+      "Gym": "Salle de sport",
+      "Parking": "Parking",
+      "Air Conditioning": "Climatisation",
+      "High-speed Wifi": "Wifi haut débit",
+      "Patio / Terrace": "Patio / Terrasse",
+      "Smart Home System": "Système de Maison Intelligente",
+      "Central Heating & Cooling": "Chauffage et Climatisation",
+      "Electric Vehicle Charging": "Recharge Véhicule Électrique",
+      "Private Gym": "Salle de Sport Privée",
+      "Wine Cellar": "Cave à Vin"
+    },
+    "clearAll": "Tout effacer",
+    "applyFilters": "Appliquer Filtres"
+  },
+  "property": {
+    "topRatedAgent": "Agent Mieux Noté",
+    "scheduleVisit": "Planifier Visite",
+    "contactAgent": "Contacter l'Agent",
+    "viewOnMap": "Voir sur la Carte",
+    "propertyFeatures": "Caractéristiques",
+    "squareMeters": "Mètres Carrés",
+    "bedrooms": "Chambres",
+    "bathrooms": "Salles de Bain",
+    "garage": "Garage",
+    "aboutThisHome": "À propos",
+    "readMore": "Lire la suite",
+    "amenitiesTitle": "Équipements",
+    "estimatedPayment": "Paiement Estimé",
+    "startingFrom": "À partir de ",
+    "perMonth": "/mois",
+    "withDown": " avec 20% initial",
+    "calculateMortgage": "Calculer Hypothèque",
+    "description1": "Découvrez le luxe dans cette superbe maison au cœur de ",
+    "description1Suffix": ". Conçue avec une emphase sur la vie intérieure-extérieure avec des murs en verre.",
+    "description2": "Cuisine équipée d'appareils haut de gamme. Suite parentale, vrai sanctuaire de relaxation avec balcon."
+  }
+}
