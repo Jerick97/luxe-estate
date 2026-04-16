@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { Heart, BedDouble, Bath, Maximize } from "lucide-react";
+import { BedDouble, Bath, Maximize } from "lucide-react";
 import { Property } from "@/lib/types";
 import Link from "next/link";
+import { SavePropertyButton } from "./SavePropertyButton";
 
 interface Props {
 	property: Property;
@@ -20,9 +21,7 @@ export const PropertyCard = ({ property, className = "" }: Props) => {
 					fill
 					className="object-cover transition-transform duration-500 group-hover:scale-110"
 				/>
-				<button className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-black/50 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark z-10">
-					<Heart className="w-[18px] h-[18px]" strokeWidth={1.5} />
-				</button>
+				<SavePropertyButton propertyId={property.id} />
 				<div
 					className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded z-10 ${property.status === "FOR RENT" ? "bg-mosque/90" : "bg-nordic-dark/90"}`}
 				>

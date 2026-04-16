@@ -3,7 +3,10 @@
     "buy": "Buy",
     "rent": "Rent",
     "sell": "Sell",
-    "savedHomes": "Saved Homes"
+    "savedHomes": "Saved Homes",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign out"
   },
   "home": {
     "titlePrefix": "Find your ",
@@ -81,5 +84,9 @@
     "description1": "Experience modern luxury in this architecturally stunning home located in the heart of ",
     "description1Suffix": ". Designed with an emphasis on indoor-outdoor living, the residence features floor-to-ceiling glass walls that flood the interiors with natural light.",
     "description2": "The open-concept kitchen is equipped with top-of-the-line appliances and custom cabinetry, perfect for culinary enthusiasts. Retreat to the primary suite, a sanctuary of relaxation with a spa-inspired bath and private balcony."
+  },
+  "login": {
+    "title": "Welcome to LuxeEstate",
+    "subtitle": "Unlock exclusive properties worldwide."
   }
 }

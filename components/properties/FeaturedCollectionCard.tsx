@@ -7,6 +7,7 @@ interface Props {
 }
 
 import Link from "next/link";
+import { SavePropertyButton } from "./SavePropertyButton";
 
 export const FeaturedCollectionCard = ({ property }: Props) => {
   return (
@@ -25,9 +26,7 @@ export const FeaturedCollectionCard = ({ property }: Props) => {
           </div>
         )}
         
-        <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center text-nordic-dark hover:bg-mosque hover:text-white transition-all z-10">
-          <Heart className="w-5 h-5" strokeWidth={1.5} />
-        </button>
+        <SavePropertyButton propertyId={property.id} />
         
         <div className="absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60 z-5"></div>
       </div>

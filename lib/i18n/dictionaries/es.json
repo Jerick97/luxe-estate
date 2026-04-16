@@ -3,7 +3,10 @@
     "buy": "Comprar",
     "rent": "Alquilar",
     "sell": "Vender",
-    "savedHomes": "Guardados"
+    "savedHomes": "Guardados",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "signOut": "Cerrar sesión"
   },
   "home": {
     "titlePrefix": "Encuentra tu ",
@@ -81,5 +84,9 @@
     "description1": "Crea recuerdos inolvidables en esta impresionante casa en el corazón de ",
     "description1Suffix": ". Diseñada con énfasis en la vida interior-exterior, la residencia cuenta con ventanales de vidrio que llenan los interiores de luz natural.",
     "description2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes personalizados. Refúgiate en la suite principal, un santuario de relajación con spa y balcón privado."
+  },
+  "login": {
+    "title": "Bienvenido a LuxeEstate",
+    "subtitle": "Desbloquea propiedades exclusivas en todo el mundo."
   }
 }

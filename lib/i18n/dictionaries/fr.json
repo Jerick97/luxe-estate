@@ -3,7 +3,10 @@
     "buy": "Acheter",
     "rent": "Louer",
     "sell": "Vendre",
-    "savedHomes": "Sauvegardés"
+    "savedHomes": "Sauvegardés",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion"
   },
   "home": {
     "titlePrefix": "Trouvez votre ",
@@ -81,5 +84,9 @@
     "description1": "Découvrez le luxe dans cette superbe maison au cœur de ",
     "description1Suffix": ". Conçue avec une emphase sur la vie intérieure-extérieure avec des murs en verre.",
     "description2": "Cuisine équipée d'appareils haut de gamme. Suite parentale, vrai sanctuaire de relaxation avec balcon."
+  },
+  "login": {
+    "title": "Bienvenue à LuxeEstate",
+    "subtitle": "Débloquez des propriétés exclusives dans le monde entier."
   }
 }

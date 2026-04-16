@@ -1,15 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { Building, Search, Bell, User } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Building, Search, Bell, User, LogOut, Heart, Settings } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { SearchFiltersModal } from "@/components/search/SearchFiltersModal";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
 import { useTranslation } from "@/components/providers/I18nProvider";
+import { useSavedProperties } from "@/components/providers/SavedPropertiesProvider";
+import { createClient } from "@/lib/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export const Navbar = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const { savedPropertyIds } = useSavedProperties();
+  const savedCount = savedPropertyIds.length;
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-nordic-dark/10 dark:border-white/5">
@@ -58,11 +96,107 @@ export const Navbar = () => {
             
             <LanguageSelector />
             
-            <button className="flex items-center gap-2 pl-2 sm:border-l border-nordic-dark/10 dark:border-white/10 sm:ml-2">
-              <div className="w-9 h-9 rounded-full bg-[#EAC9B6] flex items-center justify-center overflow-hidden ring-2 ring-transparent hover:ring-mosque transition-all relative">
-                <User className="h-[18px] w-[18px] text-[#A67E67]" strokeWidth={2.5} />
+            {user ? (
+              <div className="relative pl-2 sm:border-l border-nordic-dark/10 dark:border-white/10 sm:ml-2" ref={userMenuRef}>
+                <button 
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center gap-2 focus:outline-none"
+                  aria-label="User menu"
+                >
+                  <div className={`w-9 h-9 rounded-full overflow-hidden ring-2 transition-all relative ${isUserMenuOpen ? 'ring-mosque shadow-soft' : 'ring-transparent hover:ring-mosque'}`}>
+                    {user.user_metadata?.avatar_url ? (
+                      <Image 
+                        src={user.user_metadata.avatar_url} 
+                        alt="User avatar" 
+                        width={36}
+                        height={36}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#EAC9B6] flex items-center justify-center">
+                        <User className="h-[18px] w-[18px] text-[#A67E67]" strokeWidth={2.5} />
+                      </div>
+                    )}
+                  </div>
+                </button>
+                
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-white/10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-1.5 overflow-hidden z-50 animate-in fade-in zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95 origin-top-right transition-all">
+                    
+                    {/* Header: Avatar + Info */}
+                    <div className="flex items-center gap-3 p-3 mb-1 bg-gray-50/50 dark:bg-black/20 rounded-xl">
+                      <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 dark:border-white/5 ring-2 ring-transparent">
+                        {user.user_metadata?.avatar_url ? (
+                          <Image 
+                            src={user.user_metadata.avatar_url} 
+                            alt="User avatar" 
+                            width={40} height={40}
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-[#EAC9B6] flex items-center justify-center">
+                            <User className="h-5 w-5 text-[#A67E67]" strokeWidth={2.5} />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <p className="text-sm font-semibold text-nordic-dark dark:text-white truncate">
+                          {user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}
+                        </p>
+                        <p className="text-xs text-nordic-dark/60 dark:text-gray-400 truncate mt-0.5">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="h-px bg-gray-200 dark:bg-white/10 my-1.5 mx-2"></div>
+
+                    {/* Navigation Links */}
+                    <div className="space-y-0.5">
+                      <Link href="#" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-nordic-dark dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors text-left group">
+                        <User className="w-4 h-4 text-nordic-dark/50 dark:text-gray-400 group-hover:text-mosque transition-colors" />
+                        <span>{t("navbar.profile")}</span>
+                      </Link>
+                      <Link href="#" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-nordic-dark dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors text-left group">
+                        <Heart className="w-4 h-4 text-nordic-dark/50 dark:text-gray-400 group-hover:text-mosque transition-colors" />
+                        <span>{t("navbar.savedHomes")}</span>
+                        {savedCount > 0 && (
+                          <span className="ml-auto bg-mosque/10 text-mosque dark:bg-mosque/20 dark:text-mosque font-semibold text-[10px] px-2 py-0.5 rounded-full">{savedCount}</span>
+                        )}
+                      </Link>
+                      <Link href="#" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-nordic-dark dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors text-left group">
+                        <Settings className="w-4 h-4 text-nordic-dark/50 dark:text-gray-400 group-hover:text-mosque transition-colors" />
+                        <span>{t("navbar.settings")}</span>
+                      </Link>
+                    </div>
+
+                    <div className="h-px bg-gray-200 dark:bg-white/10 my-1.5 mx-2"></div>
+
+                    {/* Sign out */}
+                    <button
+                      onClick={async () => {
+                        setIsUserMenuOpen(false);
+                        await supabase.auth.signOut();
+                        window.location.reload();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors text-left group"
+                    >
+                      <LogOut className="w-4 h-4 text-rose-500/70 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors" />
+                      <span className="font-medium">{t("navbar.signOut")}</span>
+                    </button>
+                    
+                  </div>
+                )}
               </div>
-            </button>
+            ) : (
+              <Link href="/login" className="flex items-center gap-2 pl-2 sm:border-l border-nordic-dark/10 dark:border-white/10 sm:ml-2">
+                <div className="w-9 h-9 rounded-full bg-[#EAC9B6] flex items-center justify-center overflow-hidden ring-2 ring-transparent hover:ring-mosque transition-all relative">
+                  <User className="h-[18px] w-[18px] text-[#A67E67]" strokeWidth={2.5} />
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -72,7 +206,12 @@ export const Navbar = () => {
           <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-mosque bg-mosque/10">{t("navbar.buy")}</Link>
           <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-nordic-dark hover:bg-black/5">{t("navbar.rent")}</Link>
           <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-nordic-dark hover:bg-black/5">{t("navbar.sell")}</Link>
-          <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-nordic-dark hover:bg-black/5">{t("navbar.savedHomes")}</Link>
+          <Link href="#" className="flex justify-between items-center px-3 py-2 rounded-md text-base font-medium text-nordic-dark hover:bg-black/5">
+            {t("navbar.savedHomes")}
+            {savedCount > 0 && (
+              <span className="bg-mosque/10 text-mosque dark:bg-mosque/20 dark:text-mosque font-semibold text-[10px] px-2 py-0.5 rounded-full">{savedCount}</span>
+            )}
+          </Link>
         </div>
       </div>
 

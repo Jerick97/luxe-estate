@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { Navbar } from "@/components/layout/Navbar";
 import { I18nProvider } from "@/components/providers/I18nProvider";
+import { SavedPropertiesProvider } from "@/components/providers/SavedPropertiesProvider";
 import { defaultLocale, Locale, COOKIE_NAME } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import "./globals.css";
@@ -56,8 +57,10 @@ export default async function RootLayout({
     <html lang={locale} className={`${sfPro.variable} h-full antialiased`} suppressHydrationWarning>
       <body className={`min-h-full flex flex-col font-display bg-background-light text-nordic-dark`}>
         <I18nProvider locale={locale} dictionary={dictionary}>
-          <Navbar />
-          {children}
+          <SavedPropertiesProvider>
+            <Navbar />
+            {children}
+          </SavedPropertiesProvider>
         </I18nProvider>
       </body>
     </html>
