@@ -7,6 +7,7 @@ import Image from "next/image";
 import { SearchFiltersModal } from "@/components/search/SearchFiltersModal";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
 import { useTranslation } from "@/components/providers/I18nProvider";
+import { usePathname } from "next/navigation";
 import { useSavedProperties } from "@/components/providers/SavedPropertiesProvider";
 import { createClient } from "@/lib/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -15,16 +16,28 @@ export const Navbar = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { savedPropertyIds } = useSavedProperties();
   const savedCount = savedPropertyIds.length;
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const supabase = createClient();
+  const pathname = usePathname();
 
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+        setIsAdmin(profile?.role === 'admin');
+      } else {
+        setIsAdmin(false);
+      }
     };
     getUser();
 
@@ -48,6 +61,10 @@ export const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-nordic-dark/10 dark:border-white/5">
@@ -155,6 +172,14 @@ export const Navbar = () => {
 
                     {/* Navigation Links */}
                     <div className="space-y-0.5">
+                      {isAdmin && (
+                        <Link href="/admin" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-nordic-dark dark:text-gray-200 hover:bg-mosque/10 dark:hover:bg-mosque/20 rounded-lg transition-colors text-left group">
+                          <div className="w-4 h-4 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-mosque/70 group-hover:text-mosque transition-colors" style={{fontSize: '18px'}}>admin_panel_settings</span>
+                          </div>
+                          <span className="font-semibold text-mosque">Admin Dashboard</span>
+                        </Link>
+                      )}
                       <Link href="#" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-nordic-dark dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors text-left group">
                         <User className="w-4 h-4 text-nordic-dark/50 dark:text-gray-400 group-hover:text-mosque transition-colors" />
                         <span>{t("navbar.profile")}</span>

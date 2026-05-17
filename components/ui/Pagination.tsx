@@ -6,9 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface Props {
   currentPage: number;
   totalPages: number;
+  basePath?: string;
 }
 
-export const Pagination = ({ currentPage, totalPages }: Props) => {
+export const Pagination = ({ currentPage, totalPages, basePath = '/' }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -20,7 +21,7 @@ export const Pagination = ({ currentPage, totalPages }: Props) => {
       params.set('page', String(page));
     }
     const query = params.toString();
-    router.push(query ? `/?${query}` : '/');
+    router.push(`${basePath}${query ? `?${query}` : ''}`);
   };
 
   // Generate page numbers to show
@@ -52,8 +53,10 @@ export const Pagination = ({ currentPage, totalPages }: Props) => {
   return (
     <nav aria-label="Pagination" className="flex items-center justify-center gap-1.5">
       <button
+        suppressHydrationWarning
         onClick={() => goToPage(currentPage - 1)}
-        disabled={currentPage <= 1}
+        disabled={currentPage <= 1 ? true : undefined}
+        aria-disabled={currentPage <= 1}
         className="p-2 rounded-lg border border-nordic-dark/10 dark:border-white/10 text-nordic-dark dark:text-white hover:border-mosque hover:text-mosque disabled:opacity-30 disabled:cursor-not-allowed transition-all"
         aria-label="Previous page"
       >
@@ -81,8 +84,10 @@ export const Pagination = ({ currentPage, totalPages }: Props) => {
       )}
 
       <button
+        suppressHydrationWarning
         onClick={() => goToPage(currentPage + 1)}
-        disabled={currentPage >= totalPages}
+        disabled={currentPage >= totalPages ? true : undefined}
+        aria-disabled={currentPage >= totalPages}
         className="p-2 rounded-lg border border-nordic-dark/10 dark:border-white/10 text-nordic-dark dark:text-white hover:border-mosque hover:text-mosque disabled:opacity-30 disabled:cursor-not-allowed transition-all"
         aria-label="Next page"
       >
