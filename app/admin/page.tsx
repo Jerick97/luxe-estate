@@ -2,11 +2,17 @@ import React from 'react'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
+import { getDictionary } from '@/lib/i18n/getDictionary'
+import { Locale, COOKIE_NAME, defaultLocale } from '@/lib/i18n/config'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
   const cookieStore = await cookies()
+  const locale = (cookieStore.get(COOKIE_NAME)?.value as Locale) || defaultLocale
+  const dict = await getDictionary(locale)
+  const ov = dict.admin?.overview || {}
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -38,12 +44,12 @@ export default async function AdminPage() {
     <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-nordic dark:text-white tracking-tight">Dashboard Overview</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome to LuxeEstate Management.</p>
+          <h1 className="text-3xl font-bold text-nordic dark:text-white tracking-tight">{ov.title}</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{ov.subtitle}</p>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/admin/properties" className="bg-mosque hover:bg-mosque/90 text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow-md shadow-mosque/20 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
-            <span className="material-icons text-base">apartment</span> View Properties
+            <span className="material-icons text-base">apartment</span> {ov.viewProperties}
           </Link>
         </div>
       </div>
@@ -53,7 +59,7 @@ export default async function AdminPage() {
         <div className="bg-white dark:bg-[#152e2a] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 flex flex-col justify-between hover:shadow-soft transition-shadow">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Properties</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{ov.totalProperties}</p>
               <h3 className="text-3xl font-bold text-nordic dark:text-white mt-2">{propertiesResult.count || properties.length}</h3>
             </div>
             <div className="w-12 h-12 rounded-full bg-mosque/10 flex items-center justify-center">
@@ -65,7 +71,7 @@ export default async function AdminPage() {
         <div className="bg-white dark:bg-[#152e2a] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 flex flex-col justify-between hover:shadow-soft transition-shadow">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{ov.totalUsers}</p>
               <h3 className="text-3xl font-bold text-nordic dark:text-white mt-2">{users.length}</h3>
             </div>
             <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
@@ -77,7 +83,7 @@ export default async function AdminPage() {
         <div className="bg-white dark:bg-[#152e2a] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 flex flex-col justify-between hover:shadow-soft transition-shadow">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Admin Staff</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{ov.adminStaff}</p>
               <h3 className="text-3xl font-bold text-nordic dark:text-white mt-2">{adminsCount}</h3>
             </div>
             <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center">
@@ -89,7 +95,7 @@ export default async function AdminPage() {
         <div className="bg-white dark:bg-[#152e2a] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 flex flex-col justify-between hover:shadow-soft transition-shadow">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Recent Activity</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{ov.recentActivity}</p>
               <h3 className="text-3xl font-bold text-nordic dark:text-white mt-2">+5</h3>
             </div>
             <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center">
@@ -103,8 +109,8 @@ export default async function AdminPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white dark:bg-[#152e2a] rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 overflow-hidden flex flex-col">
           <div className="px-6 py-5 border-b border-gray-100 dark:border-mosque/20 flex justify-between items-center bg-gray-50/50 dark:bg-mosque/5">
-            <h2 className="text-lg font-semibold text-nordic dark:text-white">Recent Properties</h2>
-            <Link href="/admin/properties" className="text-sm text-mosque hover:underline font-medium">View All</Link>
+            <h2 className="text-lg font-semibold text-nordic dark:text-white">{ov.recentProperties}</h2>
+            <Link href="/admin/properties" className="text-sm text-mosque hover:underline font-medium">{ov.viewAll}</Link>
           </div>
           <div className="flex-1 p-0 overflow-y-auto">
             {properties.length > 0 ? (
@@ -126,15 +132,15 @@ export default async function AdminPage() {
                 ))}
               </ul>
             ) : (
-              <div className="p-6 text-center text-gray-500 dark:text-gray-400 text-sm">No properties found.</div>
+              <div className="p-6 text-center text-gray-500 dark:text-gray-400 text-sm">{ov.noProperties}</div>
             )}
           </div>
         </div>
 
         <div className="bg-white dark:bg-[#152e2a] rounded-xl shadow-sm border border-gray-100 dark:border-mosque/20 overflow-hidden flex flex-col">
           <div className="px-6 py-5 border-b border-gray-100 dark:border-mosque/20 flex justify-between items-center bg-gray-50/50 dark:bg-mosque/5">
-            <h2 className="text-lg font-semibold text-nordic dark:text-white">Recent Users</h2>
-            <Link href="/admin/users" className="text-sm text-mosque hover:underline font-medium">View All</Link>
+            <h2 className="text-lg font-semibold text-nordic dark:text-white">{ov.recentUsers}</h2>
+            <Link href="/admin/users" className="text-sm text-mosque hover:underline font-medium">{ov.viewAll}</Link>
           </div>
           <div className="flex-1 p-0 overflow-y-auto">
             {users.length > 0 ? (
@@ -162,7 +168,7 @@ export default async function AdminPage() {
                 ))}
               </ul>
             ) : (
-              <div className="p-6 text-center text-gray-500 dark:text-gray-400 text-sm">No users found.</div>
+              <div className="p-6 text-center text-gray-500 dark:text-gray-400 text-sm">{ov.noUsers}</div>
             )}
           </div>
         </div>

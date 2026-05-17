@@ -88,5 +88,70 @@
   "login": {
     "title": "Bienvenue à LuxeEstate",
     "subtitle": "Débloquez des propriétés exclusives dans le monde entier."
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "listings": "Annonces",
+      "users": "Utilisateurs"
+    },
+    "copyright": "LuxeEstate Management. Tous droits réservés.",
+    "overview": {
+      "title": "Vue d'ensemble",
+      "subtitle": "Bienvenue sur LuxeEstate Management.",
+      "totalProperties": "Total Biens",
+      "totalUsers": "Total Utilisateurs",
+      "adminStaff": "Staff Admin",
+      "recentActivity": "Activité Récente",
+      "viewProperties": "Voir les Biens",
+      "recentProperties": "Biens Récents",
+      "recentUsers": "Utilisateurs Récents",
+      "viewAll": "Voir Tout",
+      "noProperties": "Aucun bien trouvé.",
+      "noUsers": "Aucun utilisateur trouvé."
+    },
+    "dashboard": {
+      "title": "Gestion des Biens",
+      "subtitle": "Gérez votre portefeuille et suivez les performances.",
+      "totalListings": "Annonces Totales",
+      "activeProperties": "Biens Actifs",
+      "pendingSale": "Ventes en Attente",
+      "filter": "Filtres",
+      "addNewProperty": "Ajouter un Bien",
+      "beds": "Ch.",
+      "baths": "SdB",
+      "showing": "Affichage",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "noProperties": "Aucun bien trouvé dans la base de données.",
+      "editProperty": "Modifier le Bien",
+      "deleteProperty": "Supprimer le Bien",
+      "active": "Actif",
+      "pending": "En Attente",
+      "sold": "Vendu",
+      "table": {
+        "propertyDetails": "DÉTAILS",
+        "price": "PRIX",
+        "status": "STATUT",
+        "actions": "ACTIONS"
+      }
+    },
+    "users": {
+      "title": "Annuaire des Utilisateurs",
+      "subtitle": "Gérez les membres de l'équipe et leurs rôles.",
+      "addUser": "Ajouter Utilisateur",
+      "filterAll": "Tous",
+      "filterUsers": "Utilisateurs",
+      "filterAdmins": "Admins",
+      "changeRole": "Changer Rôle",
+      "updating": "Mise à jour...",
+      "administrator": "Administrateur",
+      "user": "Utilisateur",
+      "active": "Actif",
+      "properties": "PROPRIÉTÉS",
+      "salesYTD": "VENTES (YTD)",
+      "noName": "Sans Nom"
+    }
   }
 }

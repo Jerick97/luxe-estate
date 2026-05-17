@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { Pagination } from '@/components/ui/Pagination';
 import { PropertiesHeaderActions } from './PropertiesHeaderActions';
+import { getDictionary } from '@/lib/i18n/getDictionary';
+import { Locale, COOKIE_NAME, defaultLocale } from '@/lib/i18n/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +31,11 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
   const to = from + PAGE_SIZE - 1;
 
   const cookieStore = await cookies();
+  const locale = (cookieStore.get(COOKIE_NAME)?.value as Locale) || defaultLocale;
+  const dict = await getDictionary(locale);
+  const d = dict.admin?.dashboard || {};
+  const table = d.table || {};
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -82,8 +89,8 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
     <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-nordic dark:text-white tracking-tight">Property Management</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your portfolio and track performance.</p>
+          <h1 className="text-3xl font-bold text-nordic dark:text-white tracking-tight">{d.title}</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{d.subtitle}</p>
         </div>
         <PropertiesHeaderActions />
       </div>
@@ -91,7 +98,7 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <div className="bg-white dark:bg-[#152e2a] p-5 rounded-xl border border-mosque/10 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Listings</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{d.totalListings}</p>
             <p className="text-2xl font-bold text-nordic dark:text-white mt-1">{totalListings || 0}</p>
           </div>
           <div className="h-10 w-10 rounded-full bg-mosque/10 flex items-center justify-center text-mosque">
@@ -100,7 +107,7 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
         </div>
         <div className="bg-white dark:bg-[#152e2a] p-5 rounded-xl border border-mosque/10 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Active Properties</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{d.activeProperties}</p>
             <p className="text-2xl font-bold text-nordic dark:text-white mt-1">{activeCount || 0}</p>
           </div>
           <div className="h-10 w-10 rounded-full bg-hint-green flex items-center justify-center text-mosque">
@@ -109,7 +116,7 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
         </div>
         <div className="bg-white dark:bg-[#152e2a] p-5 rounded-xl border border-mosque/10 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Sale</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{d.pendingSale}</p>
             <p className="text-2xl font-bold text-nordic dark:text-white mt-1">{pendingCount || 0}</p>
           </div>
           <div className="h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
@@ -120,15 +127,15 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
       
       <div className="bg-white dark:bg-[#152e2a] rounded-xl shadow-sm border border-gray-200 dark:border-mosque/20 overflow-hidden">
         <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50/50 dark:bg-mosque/5 border-b border-gray-100 dark:border-mosque/10 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          <div className="col-span-6">Property Details</div>
-          <div className="col-span-2">Price</div>
-          <div className="col-span-2">Status</div>
-          <div className="col-span-2 text-right">Actions</div>
+          <div className="col-span-6">{table.propertyDetails}</div>
+          <div className="col-span-2">{table.price}</div>
+          <div className="col-span-2">{table.status}</div>
+          <div className="col-span-2 text-right">{table.actions}</div>
         </div>
         
         {(!properties || properties.length === 0) ? (
           <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-            No properties found in the database.
+            {d.noProperties}
           </div>
         ) : (
           properties.map((prop) => {
@@ -152,9 +159,9 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
                     <h3 className="text-lg font-bold text-nordic dark:text-white group-hover:text-mosque transition-colors cursor-pointer truncate max-w-xs">{prop.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">{prop.location}</p>
                     <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-                      <span className="flex items-center gap-1"><span className="material-icons text-[14px]">bed</span> {prop.beds} Beds</span>
+                      <span className="flex items-center gap-1"><span className="material-icons text-[14px]">bed</span> {prop.beds} {d.beds}</span>
                       <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                      <span className="flex items-center gap-1"><span className="material-icons text-[14px]">bathtub</span> {prop.baths} Baths</span>
+                      <span className="flex items-center gap-1"><span className="material-icons text-[14px]">bathtub</span> {prop.baths} {d.baths}</span>
                       <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                       <span>{prop.area} sqft</span>
                     </div>
@@ -167,23 +174,23 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
                 <div className="col-span-6 md:col-span-2">
                   {prop.status === 'active' ? (
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-hint-green text-mosque border border-mosque/10">
-                      <span className="w-1.5 h-1.5 rounded-full bg-mosque mr-1.5"></span> Active
+                      <span className="w-1.5 h-1.5 rounded-full bg-mosque mr-1.5"></span> {d.active}
                     </span>
                   ) : prop.status === 'pending' ? (
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-1.5"></span> Pending
+                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-1.5"></span> {d.pending}
                     </span>
                   ) : (
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></span> {prop.status || 'Sold'}
+                      <span className="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></span> {prop.status || d.sold}
                     </span>
                   )}
                 </div>
                 <div className="col-span-12 md:col-span-2 flex items-center justify-end gap-2">
-                  <button className="p-2 rounded-lg text-gray-400 hover:text-mosque hover:bg-hint-green/30 transition-all tooltip-trigger" title="Edit Property">
+                  <button className="p-2 rounded-lg text-gray-400 hover:text-mosque hover:bg-hint-green/30 transition-all tooltip-trigger" title={d.editProperty}>
                     <span className="material-icons text-xl">edit</span>
                   </button>
-                  <button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all tooltip-trigger" title="Delete Property">
+                  <button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all tooltip-trigger" title={d.deleteProperty}>
                     <span className="material-icons text-xl">delete_outline</span>
                   </button>
                 </div>
@@ -195,7 +202,7 @@ export default async function AdminPropertiesPage({ searchParams }: Props) {
         {(totalListings ?? 0) > 0 && (
           <div className="px-6 py-4 border-t border-gray-100 dark:border-mosque/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50 dark:bg-mosque/5">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              Showing <span className="font-medium text-nordic dark:text-white">{Math.min(from + 1, totalListings!)}</span> to <span className="font-medium text-nordic dark:text-white">{Math.min(to + 1, totalListings!)}</span> of <span className="font-medium text-nordic dark:text-white">{totalListings}</span> results
+              {d.showing} <span className="font-medium text-nordic dark:text-white">{Math.min(from + 1, totalListings!)}</span> {d.to} <span className="font-medium text-nordic dark:text-white">{Math.min(to + 1, totalListings!)}</span> {d.of} <span className="font-medium text-nordic dark:text-white">{totalListings}</span> {d.results}
             </div>
             {totalPages > 1 && (
               <Suspense fallback={<div className="h-9 w-32 bg-gray-100 dark:bg-mosque/10 rounded-lg animate-pulse"></div>}>

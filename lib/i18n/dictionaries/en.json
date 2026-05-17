@@ -88,5 +88,70 @@
   "login": {
     "title": "Welcome to LuxeEstate",
     "subtitle": "Unlock exclusive properties worldwide."
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "listings": "Listings",
+      "users": "Users"
+    },
+    "copyright": "LuxeEstate Management. All rights reserved.",
+    "overview": {
+      "title": "Dashboard Overview",
+      "subtitle": "Welcome to LuxeEstate Management.",
+      "totalProperties": "Total Properties",
+      "totalUsers": "Total Users",
+      "adminStaff": "Admin Staff",
+      "recentActivity": "Recent Activity",
+      "viewProperties": "View Properties",
+      "recentProperties": "Recent Properties",
+      "recentUsers": "Recent Users",
+      "viewAll": "View All",
+      "noProperties": "No properties found.",
+      "noUsers": "No users found."
+    },
+    "dashboard": {
+      "title": "Property Management",
+      "subtitle": "Manage your portfolio and track performance.",
+      "totalListings": "Total Listings",
+      "activeProperties": "Active Properties",
+      "pendingSale": "Pending Sale",
+      "filter": "Filter",
+      "addNewProperty": "Add New Property",
+      "beds": "Beds",
+      "baths": "Baths",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results",
+      "noProperties": "No properties found in the database.",
+      "editProperty": "Edit Property",
+      "deleteProperty": "Delete Property",
+      "active": "Active",
+      "pending": "Pending",
+      "sold": "Sold",
+      "table": {
+        "propertyDetails": "PROPERTY DETAILS",
+        "price": "PRICE",
+        "status": "STATUS",
+        "actions": "ACTIONS"
+      }
+    },
+    "users": {
+      "title": "User Directory",
+      "subtitle": "Manage team members and their roles.",
+      "addUser": "Add User",
+      "filterAll": "All Users",
+      "filterUsers": "Users",
+      "filterAdmins": "Admins",
+      "changeRole": "Change Role",
+      "updating": "Updating...",
+      "administrator": "Administrator",
+      "user": "User",
+      "active": "Active",
+      "properties": "PROPERTIES",
+      "salesYTD": "SALES (YTD)",
+      "noName": "No Name"
+    }
   }
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { getDictionary } from '@/lib/i18n/getDictionary';
+import { Locale, COOKIE_NAME, defaultLocale } from '@/lib/i18n/config';
 import { UserCard } from './UserCard';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +17,10 @@ export default async function AdminUsersPage({ searchParams }: Props) {
   const currentRole = params.role || 'all';
   
   const cookieStore = await cookies();
+  const locale = (cookieStore.get(COOKIE_NAME)?.value as Locale) || defaultLocale;
+  const dict = await getDictionary(locale);
+  const adminUsers = dict.admin?.users || {};
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -46,8 +52,8 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       <header className="w-full pt-8 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-nordic dark:text-white">User Directory</h1>
-            <p className="text-nordic/60 dark:text-gray-400 mt-1 text-sm">Manage user access and roles for your properties.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-nordic dark:text-white">{adminUsers.title}</h1>
+            <p className="text-nordic/60 dark:text-gray-400 mt-1 text-sm">{adminUsers.subtitle}</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <div className="relative group w-full md:w-80">
@@ -57,14 +63,14 @@ export default async function AdminUsersPage({ searchParams }: Props) {
               <input className="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg bg-white dark:bg-gray-800 text-nordic dark:text-white shadow-soft placeholder-nordic/30 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-sm" placeholder="Search by name, email..." type="text"/>
             </div>
             <button className="inline-flex items-center justify-center px-4 py-2.5 border border-mosque text-sm font-medium rounded-lg text-mosque bg-transparent hover:bg-mosque/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-mosque transition-colors whitespace-nowrap">
-              <span className="material-icons text-lg mr-2">add</span> Add User
+              <span className="material-icons text-lg mr-2">add</span> {adminUsers.addUser}
             </button>
           </div>
         </div>
         <div className="mt-8 flex gap-6 border-b border-nordic/10 overflow-x-auto hide-scroll">
-          <Link href="/admin/users" className={`pb-3 text-sm transition-colors ${currentRole === 'all' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>All Users</Link>
-          <Link href="/admin/users?role=user" className={`pb-3 text-sm transition-colors ${currentRole === 'user' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>Users</Link>
-          <Link href="/admin/users?role=admin" className={`pb-3 text-sm transition-colors ${currentRole === 'admin' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>Admins</Link>
+          <Link href="/admin/users" className={`pb-3 text-sm transition-colors ${currentRole === 'all' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>{adminUsers.filterAll}</Link>
+          <Link href="/admin/users?role=user" className={`pb-3 text-sm transition-colors ${currentRole === 'user' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>{adminUsers.filterUsers}</Link>
+          <Link href="/admin/users?role=admin" className={`pb-3 text-sm transition-colors ${currentRole === 'admin' ? 'font-semibold text-mosque border-b-2 border-mosque' : 'font-medium text-nordic/60 hover:text-nordic'}`}>{adminUsers.filterAdmins}</Link>
         </div>
       </header>
       
@@ -82,7 +88,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
           </div>
         ) : (
           users.map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCard key={user.id} user={user} translations={adminUsers} />
           ))
         )}
       </main>
